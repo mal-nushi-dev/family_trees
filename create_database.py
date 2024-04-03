@@ -1,15 +1,19 @@
+import sys
 import sqlite3
 import pandas as pd
 
 
-def create_db(db_file, csv_file):
-    conn = sqlite3.connect(db_file)
-    df = pd.read_csv(csv_file)
-    df.to_sql('table_name', conn, if_exists='replace', index=False)
-    conn.close()
+def connect_to_sqlite3(dbFile, dataframe):
+    conn = None
+    try:
+        conn = sqlite3.connect(dbFile)
+        create_database(dataframe=dataframe, connection=conn)
+    except sqlite3.Error as e:
+        print(f"Failed to create a connection to sqlite3: {e}")
+        sys.exit(1)
+    finally:
+        conn.close()
 
 
-if __name__ == '__main__':
-    create_db(db_file='data/sqlite3/database.db',
-              csv_file='data/csv/Nushi-Genealogy-25-Mar-2024-140326324.csv'
-              )
+def create_database(dataframe, connection):
+    dataframe.to_sql('family_tree', connection, if_exists='replace')
