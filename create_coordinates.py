@@ -55,7 +55,7 @@ def add_coordinates():
     df['coordinates'] = df['Birth place'].apply(
         lambda x: geocode_place(x, gmaps) if pd.notnull(x) else None)
     create_database.connect_to_sqlite3(
-        dataframe=df, dbFile='data/sqlite3/database.db')
+        dataframe=df, db_file='data/sqlite3/database.db')
 
 
 add_coordinates()
