@@ -2,7 +2,6 @@ import configparser
 from cachetools import cached, LRUCache
 import pandas as pd
 import googlemaps
-from create_database import DatabaseManager
 
 
 class GeocodeManager:
