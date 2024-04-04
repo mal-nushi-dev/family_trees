@@ -2,7 +2,7 @@ import configparser
 from cachetools import cached, LRUCache
 import pandas as pd
 import googlemaps
-import create_database
+from create_database import DatabaseManager
 
 
 config = configparser.ConfigParser()
@@ -50,13 +50,15 @@ def add_coordinates():
     Returns:
         None. The function modifies the dataframe in-place.
     """
-    df = pd.read_csv('data/csv/Nushi-Genealogy-3-Apr-2024-160324198.csv')
-    api_key = config['DEFAULT']['API_KEY']
+    df = pd.read_csv('data/csv/Nushi-Genealogy-3-Apr-2024-214612115.csv')
+    api_key = config['google_api']['api_key']
     gmaps = googlemaps.Client(key=api_key)
     df['coordinates'] = df['Birth place'].apply(
         lambda x: geocode_place(x, gmaps) if pd.notnull(x) else None)
-    create_database.connect_to_sqlite3(
-        dataframe=df, db_file='data/sqlite3/database.db')
+    # create_database.connect_to_sqlite3(
+    #     dataframe=df, db_file='data/sqlite3/database.db')
+    with DatabaseManager(db_file='data/sqlite3/database.db', dataframe=df) as db_manager:
+        db_manager.create_table_from_dataframe()
 
 
 add_coordinates()

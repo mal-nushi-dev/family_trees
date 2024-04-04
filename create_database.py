@@ -1,35 +1,26 @@
-import sys
 import sqlite3
+import pandas as pd
 
 
-def connect_to_sqlite3(db_file, dataframe):
-    """
-    Connects to a SQLite3 database and creates a table.
+class DatabaseManager:
+    def __init__(self, db_file: str, dataframe: pd.DataFrame):
+        self.db_file = db_file
+        self.dataframe = dataframe
+        self.connection = None
 
-    Parameters:
-    db_file (str): The database file to connect to.
-    dataframe (pandas.DataFrame): The dataframe to convert into a SQL table.
+    def connect(self):
+        self.connection = sqlite3.connect(self.db_file)
 
-    Raises:
-    sqlite3.Error: If a connection error occurs.
-    """
-    conn = None
-    try:
-        conn = sqlite3.connect(db_file)
-        create_table(dataframe=dataframe, connection=conn)
-    except sqlite3.Error as e:
-        print(f"Failed to create a connection to sqlite3: {e}")
-        raise
-    finally:
-        conn.close()
+    def create_table_from_dataframe(self):
+        self.dataframe.to_sql(
+            'family_tree', self.connection, if_exists='replace')
 
+    def __enter__(self):
+        self.connect()
+        return self
 
-def create_table(dataframe, connection):
-    """
-    Creates a table in the SQLite3 database from a pandas DataFrame.
-
-    Parameters:
-    dataframe (pandas.DataFrame): The dataframe to convert into a SQL table.
-    connection (sqlite3.Connection): The connection to the SQLite3 database.
-    """
-    dataframe.to_sql('family_tree', connection, if_exists='replace')
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if exc_type is not None:
+            print(f"Failed to create a connection to sqlite3: {exc_val}")
+        if self.connection:
+            self.connection.close()
