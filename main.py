@@ -1,11 +1,12 @@
 import configparser
+import pandas as pd
 from create_coordinates import GeocodeManager
 from create_database import DatabaseManager
 from create_csv import FamilyEchoDownloader
 from rename_file import rename_file
 
 
-def run_family_echo_downloader(username: str, password: str, url: str):
+def run_family_echo_downloader(username: str, password: str, url: str) -> None:
     """
     Initializes and runs the FamilyEchoDownloader to download family data.
 
@@ -23,7 +24,7 @@ def run_family_echo_downloader(username: str, password: str, url: str):
     downloader.run()
 
 
-def run_geocode_manager(file_path: str):
+def run_geocode_manager(file_path: str) -> pd.DataFrame:
     """
     Processes a CSV file through GeocodeManager to add geocode coordinates.
 
@@ -38,7 +39,7 @@ def run_geocode_manager(file_path: str):
     return geocode_manager.run()
 
 
-def run_database_manager(database_name: str, table_name: str, dataframe):
+def run_database_manager(database_name: str, table_name: str, dataframe) -> None:
     """
     Saves a DataFrame to a database using DatabaseManager.
 
@@ -57,7 +58,7 @@ def run_database_manager(database_name: str, table_name: str, dataframe):
         db_manager.create_table_from_dataframe()
 
 
-def run_rename_files(family_name: str):
+def run_rename_files(family_name: str) -> str:
     """
     Renames CSV files in the current directory based on a provided family name.
 
