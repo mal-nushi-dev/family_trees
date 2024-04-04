@@ -5,68 +5,102 @@ from create_csv import FamilyEchoDownloader
 from rename_file import rename_file
 
 
-def run_family_echo_downloader(config):
+def run_family_echo_downloader(username: str, password: str, url: str):
     """
-    Runs the FamilyEchoDownloader script.
+    Initializes and runs the FamilyEchoDownloader to download family data.
 
     Parameters:
-        config (ConfigParser): The application configuration.
+        username (str): The username for FamilyEcho.
+        password (str): The password for FamilyEcho.
+        url (str): The target URL from where the family data is to be
+                   downloaded.
+
+    Side Effects:
+        Will create and overwrite files in the current directory.
     """
-    usr = config['family_echo']['username']
-    pswrd = config['family_echo']['password']
-    url = config['family_echo']['url']
-    downloader = FamilyEchoDownloader(username=usr,
-                                      password=pswrd,
-                                      url=url)
+    downloader = FamilyEchoDownloader(
+        username=username, password=password, url=url)
     downloader.run()
 
 
-def run_geocode_manager(file):
+def run_geocode_manager(file_path: str):
     """
-    Runs the GeocodeManager script and returns the DataFrame it creates.
-
-    Returns:
-        DataFrame: The DataFrame with added coordinates.
-    """
-    geocode_manager = GeocodeManager(file)
-    coordinates_df = geocode_manager.run()
-    return coordinates_df
-
-
-def run_database_manager(df):
-    """
-    Runs the DatabaseManager script.
+    Processes a CSV file through GeocodeManager to add geocode coordinates.
 
     Parameters:
-        coordinates_df (DataFrame): The DataFrame to be stored in the db.
+        file_path (str): Path to the CSV file containing addresses.
+
+    Returns:
+        pd.DataFrame: Enhanced DataFrame with added latitude and longitude
+                      coordinates.
     """
-    with DatabaseManager(db_file='family_trees.db',
-                         dataframe=df) as db_manager:
+    geocode_manager = GeocodeManager(file=file_path)
+    return geocode_manager.run()
+
+
+def run_database_manager(database_name: str, table_name: str, dataframe):
+    """
+    Saves a DataFrame to a database using DatabaseManager.
+
+    Parameters:
+        database_name (str): Name of the SQLite database file.
+        table_name (str): Name of the table within the database.
+        dataframe (pd.DataFrame): DataFrame to be saved.
+
+    Side Effects:
+        Modifies the database by creating or replacing a table with the
+        provided DataFrame.
+    """
+    with DatabaseManager(database=database_name,
+                         table=table_name,
+                         dataframe=dataframe) as db_manager:
         db_manager.create_table_from_dataframe()
 
 
-def run_rename_files(config):
+def run_rename_files(family_name: str):
     """
-    Runs the rename_files function to rename any csv files in the directory.
+    Renames CSV files in the current directory based on a provided family name.
 
     Parameters:
-        config (ConfigParser): The application configuration.
+        family_name (str): Family name used to identify and rename relevant
+                           CSV files.
+
+    Returns:
+        str | None: New filename if a file was renamed, otherwise None.
+
+    Side Effects:
+        May rename one or more files in the current directory.
     """
-    family_name = config['family_echo']['family_name']
     return rename_file(family_name)
 
 
-def main():
+def main() -> None:
     """
-    The main function that runs all scripts.
+    Orchestrate the execution of scripts to download, process,
+    and store family data.
+
+    Reads configuration from 'config.ini', downloads family data from
+    FamilyEcho, renames the downloaded file, adds geocode coordinates to
+    address data in the file, and saves the enhanced data
+    into a SQLite database.
     """
     config = configparser.ConfigParser()
     config.read('config.ini')
 
-    run_family_echo_downloader(config=config)
-    csv_file = run_rename_files(config=config)
-    coordinates_df = run_geocode_manager(file=csv_file)
-    run_database_manager(df=coordinates_df)
+    family_echo_config = config['family_echo']
+    run_family_echo_downloader(
+        username=family_echo_config['username'],
+        password=family_echo_config['password'],
+        url=family_echo_config['url']
+    )
+
+    csv_file = run_rename_files(family_name=family_echo_config['family_name'])
+    coordinates_df = run_geocode_manager(file_path=csv_file)
+    run_database_manager(
+        database_name=family_echo_config['database_name'],
+        table_name=family_echo_config['family_name'],
+        dataframe=coordinates_df
+    )
 
 
 if __name__ == "__main__":

@@ -5,25 +5,46 @@ import googlemaps
 
 
 class GeocodeManager:
-    """Manages geocoding operations"""
+    """
+    Manages the geocoding of birthplaces using the Google Maps API,
+    employing caching to optimize API usage.
+
+    This class reads a CSV file containing birthplaces, utilizes the
+    Google Maps API to geocode these locations, and appends the results as
+    coordinates to the DataFrame. Caching is used to minimize repeat API calls
+    for the same locations, enhancing efficiency and reducing cost.
+
+    Attributes:
+        file (str): Path to the CSV file containing birthplaces.
+        cache (LRUCache): A least-recently-used (LRU) cache to store geocoding
+                          results and minimize API calls.
+
+    Usage:
+    ------
+    >>> geocode_manager = GeocodeManager('path/to/birthplaces.csv')
+    >>> coordinates_df = geocode_manager.run()
+    """
     cache = LRUCache(maxsize=1000)
 
-    def __init__(self, file):
+    def __init__(self, file: str):
         self.config = configparser.ConfigParser()
         self.config.read('config.ini')
         self.file = file
 
     @cached(cache)
-    def _geocode_place(self, birthplace, gmaps):
+    def _geocode_place(self, birthplace: str, gmaps: googlemaps.Client):
         """
-        Geocodes a birthplace using the Google Maps API.
+        Geocodes a birthplace using the Google Maps API, with results
+        cached to improve efficiency.
 
-        Args:
+        Parameters:
             birthplace (str): The birthplace to geocode.
-            gmaps (googlemaps.Client): The Google Maps client.
+            gmaps (googlemaps.Client): The Google Maps client instance
+                                       configured with an API key.
 
         Returns:
-            str: The coordinates of birthplace, or None if geocoding failed.
+            str | None: The coordinates of the birthplace as a string
+                        '(latitude, longitude)', or None if geocoding fails.
         """
         geocode_result = gmaps.geocode(birthplace)
         if geocode_result:
@@ -33,7 +54,15 @@ class GeocodeManager:
 
     def add_coordinates(self):
         """
-        Adds coordinates to a DataFrame of birthplaces and saves it to a db.
+        Adds coordinates to the DataFrame of birthplaces read from a CSV file.
+
+        Utilizes the Google Maps API to geocode each birthplace and
+        appends the result as a new column. Caching is employed to minimize
+        repeat API calls for previously geocoded locations.
+
+        Returns:
+            pd.DataFrame: The updated DataFrame with a new 'coordinates'
+                          column containing geocoded coordinates.
         """
         df = pd.read_csv(self.file)
         api_key = self.config['google_api']['api_key']
@@ -44,11 +73,14 @@ class GeocodeManager:
 
     def run(self):
         """
-        Runs the geocoding process by calling the add_coordinates method.
-        This method adds coordinates to a DataFrame of birthplaces and
-            returns the DataFrame.
+        Executes the geocoding process, enhancing a DataFrame with geocoded
+        coordinates for birthplaces.
+
+        This method orchestrates reading birthplace data, geocoding each
+        location, and returning the enhanced DataFrame.
 
         Returns:
-            DataFrame: The DataFrame with added coordinates.
+            pd.DataFrame: The DataFrame augmented with a 'coordinates'
+                          column for geocoded birthplaces.
         """
         return self.add_coordinates()

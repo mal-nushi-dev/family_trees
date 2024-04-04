@@ -3,29 +3,40 @@ import re
 import glob
 
 
-def rename_file(family_name):
+def rename_file(family_name: str):
     """
-    Renames a family's Genealogy csv file by removing the unique
-        identifier after the family name.
+    Searches for and renames a CSV file associated with a family's genealogy.
 
-    The function searches for files in the current directory that match
-        the pattern '{family_name}-Genealogy-*.csv'.
-    It then renames these files to '{family_name}-Genealogy.csv', overwriting
-        any existing files with the same name.
+    This function looks for CSV files in the current directory with a name
+    following the pattern '{family_name}-Genealogy-*.csv'. It renames the
+    first matching file to '{family_name}-Genealogy.csv', overwriting an
+    existing file with that name. The function is case-insensitive to the
+    family name but will capitalize it in the new filename.
 
     Parameters:
-    family_name (str): The family name to search for in the file names.
+        family_name (str): The base name of the family to be used in
+                           searching and renaming the file.
 
     Returns:
-    None
+        str or None: The new filename if a file was successfully
+                     renamed, None otherwise.
 
     Raises:
-    OSError: If there is an error renaming the file.
+        OSError: If the file cannot be renamed due to system-related errors
+                 such as permission issues or the file being in use.
+
+    Note:
+        This function will rename the first file that matches the pattern
+        and stop. If multiple files match, subsequent files
+        will not be processed.
     """
+    # Capitalize the family name to ensure consistent file matching
+    family_name = family_name.capitalize()
+
     # Pattern to match a specific family's Genealogy csv file
     pattern = f'{family_name}-Genealogy-*.csv'
 
-    # Search for files in the directory matching that file pattern
+    # Use glob to find all files in the current dir that match the pattern
     files = glob.glob(pattern)
 
     for file in files:
@@ -50,4 +61,4 @@ def rename_file(family_name):
 
 if __name__ == "__main__":
     # Specify the family name here
-    rename_file(family_name="Nushi")
+    rename_file(family_name="nushi")

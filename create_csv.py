@@ -12,53 +12,36 @@ config.read('config.ini')
 
 class FamilyEchoDownloader:
     """
-    A class used to automate the process of downloading family tree data
-        from FamilyEcho.
+    Automates the process of downloading family tree data from FamilyEcho
+    using Selenium WebDriver.
 
-    This class uses Selenium WebDriver to automate browser actions, including
-        signing in to the website and navigating to the correct
-        page to download the data.
+    This class encapsulates the steps required to sign into FamilyEcho,
+    navigate to the appropriate page, and trigger the download of the
+    family tree data in CSV format. It's designed to run in a headless Chrome
+    browser session for efficiency and can be customized
+    via the `config.ini` file.
 
-    Attributes
-    ----------
-    URL : str
-        The URL of the page to download data from.
-    SIGN_IN_ID : str
-        The HTML ID of the sign-in button on the page.
-    LOGIN_TYPE : str
-        The HTML ID of the login type radio button on the page.
-    USERNAME : str
-        The HTML ID of the username input field on the page.
-    PASSWORD : str
-        The HTML ID of the password input field on the page.
-    LOGIN : str
-        The HTML ID of the login button on the page.
-    DOWNLOAD_PAGE : str
-        The XPath of the download page link on the page.
-    DOWNLOAD_OPTIONS : str
-        The HTML ID of the iframe containing the download options on the page.
-    CSV_OPTION : str
-        The HTML ID of the CSV download option on the page.
-    DOWNLOAD_BUTTON : str
-        The HTML ID of the download button on the page.
-    username : str
-        The username to use to sign in to FamilyEcho.
-    password : str
-        The password to use to sign in to FamilyEcho.
+    Attributes:
+    -----------
+    url (str): The URL to start the automation process,
+               typically the login page.
+    username (str): The username for login.
+    password (str): The password for login.
+    driver (selenium.webdriver.Chrome): The Selenium WebDriver instance
+                                        used for browser automation.
+    wait (selenium.webdriver.support.ui.WebDriverWait): A WebDriverWait
+        instance for managing dynamic content loading.
 
-    Methods
-    -------
-    setup_driver():
-        Sets up the Selenium WebDriver with the necessary options.
-    sign_in():
-        Signs into the website using the provided username and password.
-    download_file():
-        Downloads the family tree file in CSV format.
-    run():
-        Runs the entire process of setting up the driver, signing in, and
-            downloading the file.
+    Usage:
+    ------
+    >>> downloader = FamilyEchoDownloader(username='your_username',
+    ...     password='your_password', url='login_page_url')
+    >>> downloader.run()
+
+    Note that this class is designed for use with Chrome WebDriver.
+    Ensure you have ChromeDriver installed and
+    accessible in your system's PATH.
     """
-    # URL = 'https://www.familyecho.com/?p=START&c=86mj7dkg5uovc9o3&f=746270266482117578'
     SIGN_IN_ID = "do_signin"
     LOGIN_TYPE = "newuser_off"
     USERNAME = "username"
@@ -69,7 +52,7 @@ class FamilyEchoDownloader:
     CSV_OPTION = "csv"
     DOWNLOAD_BUTTON = "do_download"
 
-    def __init__(self, username, password, url):
+    def __init__(self, username: str, password: str, url: str):
         self.username = username
         self.password = password
         self.url = url
@@ -78,7 +61,12 @@ class FamilyEchoDownloader:
 
     def setup_driver(self):
         """
-        Sets up the Selenium WebDriver with the necessary options.
+        Initializes the Selenium WebDriver with ChromeOptions for
+        headless operation and other performance optimizations.
+
+        This method configures the WebDriver to run Chrome in headless mode
+        to improve performance and reduce resource usage during the automation
+        process. Image loading is disabled to speed up page loads.
         """
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument('headless')
@@ -93,7 +81,10 @@ class FamilyEchoDownloader:
 
     def sign_in(self):
         """
-        Signs into the website using the provided username and password.
+        Automates the sign-in process using the provided username and password.
+
+        This method navigates through the sign-in form, inputs the username
+        and password, and submits the form to log into the website.
         """
         print("Signing in...")
         sign_in_button = self.wait.until(
@@ -120,7 +111,13 @@ class FamilyEchoDownloader:
 
     def download_file(self):
         """
-        Downloads the family tree file in CSV format.
+        Navigates to the download page and initiates the download of the
+        family tree data in CSV format.
+
+        This method waits for the download page link to become clickable,
+        navigates to the download options, selects the CSV format, and clicks
+        the download button. It waits for the download to
+        initiate before proceeding.
         """
         print("Downloading file...")
         download_page = self.wait.until(
@@ -148,9 +145,13 @@ class FamilyEchoDownloader:
 
     def run(self):
         """
-        Runs the entire process of setting up the driver, signing in,
-            and downloading the file.
-        Handles any exceptions that occur during the process.
+        Executes the complete process of downloading the family tree
+        data from FamilyEcho.
+
+        This method orchestrates the setup of the WebDriver, signing in,
+        navigating to the download page, and initiating the file download.
+        It handles exceptions gracefully and ensures the WebDriver is
+        properly closed after the operation.
         """
         try:
             self.setup_driver()
