@@ -55,8 +55,6 @@ def add_coordinates():
     gmaps = googlemaps.Client(key=api_key)
     df['coordinates'] = df['Birth place'].apply(
         lambda x: geocode_place(x, gmaps) if pd.notnull(x) else None)
-    # create_database.connect_to_sqlite3(
-    #     dataframe=df, db_file='data/sqlite3/database.db')
     with DatabaseManager(db_file='data/sqlite3/database.db', dataframe=df) as db_manager:
         db_manager.create_table_from_dataframe()
 
