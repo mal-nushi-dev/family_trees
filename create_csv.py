@@ -52,14 +52,14 @@ class FamilyEchoDownloader:
     CSV_OPTION = "csv"
     DOWNLOAD_BUTTON = "do_download"
 
-    def __init__(self, username: str, password: str, url: str):
+    def __init__(self, username: str, password: str, url: str) -> None:
         self.username = username
         self.password = password
         self.url = url
         self.driver = None
         self.wait = None
 
-    def setup_driver(self):
+    def setup_driver(self) -> None:
         """
         Initializes the Selenium WebDriver with ChromeOptions for
         headless operation and other performance optimizations.
@@ -79,7 +79,7 @@ class FamilyEchoDownloader:
         self.driver = webdriver.Chrome(options=chrome_options)
         self.wait = WebDriverWait(self.driver, 1)
 
-    def sign_in(self):
+    def sign_in(self) -> None:
         """
         Automates the sign-in process using the provided username and password.
 
@@ -109,7 +109,7 @@ class FamilyEchoDownloader:
         login.click()
         print("Successfully logged in!")
 
-    def download_file(self):
+    def download_file(self) -> None:
         """
         Navigates to the download page and initiates the download of the
         family tree data in CSV format.
@@ -143,7 +143,7 @@ class FamilyEchoDownloader:
         time.sleep(5)
         print("File successfully downloaded!")
 
-    def run(self):
+    def run(self) -> None:
         """
         Executes the complete process of downloading the family tree
         data from FamilyEcho.

@@ -26,13 +26,13 @@ class GeocodeManager:
     """
     cache = LRUCache(maxsize=1000)
 
-    def __init__(self, file: str):
+    def __init__(self, file: str) -> None:
         self.config = configparser.ConfigParser()
         self.config.read('config.ini')
         self.file = file
 
     @cached(cache)
-    def _geocode_place(self, birthplace: str, gmaps: googlemaps.Client):
+    def _geocode_place(self, birthplace: str, gmaps: googlemaps.Client) -> str:
         """
         Geocodes a birthplace using the Google Maps API, with results
         cached to improve efficiency.
@@ -52,7 +52,7 @@ class GeocodeManager:
             longitude = geocode_result[0]['geometry']['location']['lng']
             return str((latitude, longitude))
 
-    def add_coordinates(self):
+    def add_coordinates(self) -> pd.DataFrame:
         """
         Adds coordinates to the DataFrame of birthplaces read from a CSV file.
 
@@ -71,7 +71,7 @@ class GeocodeManager:
             lambda x: self._geocode_place(x, gmaps) if pd.notnull(x) else None)
         return df
 
-    def run(self):
+    def run(self) -> pd.DataFrame:
         """
         Executes the geocoding process, enhancing a DataFrame with geocoded
         coordinates for birthplaces.

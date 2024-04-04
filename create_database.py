@@ -29,7 +29,7 @@ class DatabaseManager:
     ...     db_manager.create_table_from_dataframe()
     """
 
-    def __init__(self, database: str, table: str, dataframe: pd.DataFrame):
+    def __init__(self, database: str, table: str, dataframe: pd.DataFrame) -> None:
         """
         Initializes the DatabaseManager with the specified database,
         table name, and DataFrame.
@@ -46,7 +46,7 @@ class DatabaseManager:
         self.dataframe = dataframe
         self.connection = None
 
-    def connect(self):
+    def connect(self) -> None:
         """
         Establishes a connection to the SQLite database specified
         during initialization.
@@ -59,7 +59,7 @@ class DatabaseManager:
         """
         self.connection = sqlite3.connect(self.database.upper() + '.db')
 
-    def create_table_from_dataframe(self):
+    def create_table_from_dataframe(self) -> None:
         """
         Writes the DataFrame to the specified table in the SQLite database.
 
@@ -73,7 +73,7 @@ class DatabaseManager:
         self.dataframe.to_sql(
             self.table.upper(), self.connection, if_exists='replace')
 
-    def __enter__(self):
+    def __enter__(self) -> "DatabaseManager":
         """
         Establishes the database connection when entering a
         'with' statement context.
@@ -85,7 +85,7 @@ class DatabaseManager:
         self.connect()
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
         """
         Ensures the database connection is closed when exiting a
         'with' statement context.
@@ -104,3 +104,4 @@ class DatabaseManager:
             print(f"Failed to create a connection to sqlite3: {exc_val}")
         if self.connection:
             self.connection.close()
+            self.connection = None
