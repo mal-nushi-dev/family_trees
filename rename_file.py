@@ -1,9 +1,9 @@
 import os
-import re
 import glob
+from typing import Optional
 
 
-def rename_file(family_name: str):
+def rename_file(family_name: str) -> Optional[str]:
     """
     Searches for and renames a CSV file associated with a family's genealogy.
 
@@ -18,8 +18,8 @@ def rename_file(family_name: str):
                            searching and renaming the file.
 
     Returns:
-        str or None: The new filename if a file was successfully
-                     renamed, None otherwise.
+        Optional[str]: The new filename if a file was successfully
+                       renamed, None otherwise.
 
     Raises:
         OSError: If the file cannot be renamed due to system-related errors
@@ -39,26 +39,31 @@ def rename_file(family_name: str):
     # Use glob to find all files in the current dir that match the pattern
     files = glob.glob(pattern)
 
-    for file in files:
-        print(f"Processing '{file}'...")
+    if not files:
+        print(f"No matching files found for family name: '{family_name}'.")
+        return None
 
-        # Extract last name using REGEX
-        match = re.match(rf'({family_name})-Genealogy-', file)
-        if match:
-            # Construct the new file name
-            new_filename = f"{match.group(1)}-Genealogy.csv"
+    # Only processing the first matching file
+    file = files[0]
+    print(f"Processing '{file}'...")
 
-            # Rename the file and overwrite any existing files
-            try:
-                os.rename(file, new_filename)
-                print(f"Renamed '{file}' to '{new_filename}'")
-                return new_filename
-            except OSError as e:
-                print(f"Error renaming file '{file}': {e}")
-        else:
-            print(f"No matching files found for family name: '{family_name}'.")
+    # Construct the new file name
+    new_filename = f"{family_name}-Genealogy.csv"
+
+    # Rename the file and overwrite any existing files
+    try:
+        os.rename(file, new_filename)
+        print(f"Renamed '{file}' to '{new_filename}'")
+        return new_filename
+    except OSError as e:
+        print(f"Error renaming file '{file}': {e}")
+        raise
 
 
 if __name__ == "__main__":
     # Specify the family name here
-    rename_file(family_name="nushi")
+    renamed_file = rename_file(family_name="nushi")
+    if renamed_file:
+        print(f"File successfully renamed to: {renamed_file}")
+    else:
+        print("No file was renamed.")
