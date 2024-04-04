@@ -1,5 +1,4 @@
 import configparser
-from multiprocessing import Pool
 from cachetools import cached, LRUCache
 import pandas as pd
 import googlemaps
@@ -10,6 +9,8 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 
 # Create instance of LRU cache
+# This is used so that we are not making too many API requests for the same
+#   location.
 cache = LRUCache(maxsize=1000)
 
 
