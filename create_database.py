@@ -49,7 +49,7 @@ class DatabaseManager:
             existing table if it exists.
         """
         self.dataframe.to_sql(
-            'family_tree', self.connection, if_exists='replace')
+            self.db_file, self.connection, if_exists='replace')
 
     def __enter__(self):
         """

@@ -8,9 +8,10 @@ class GeocodeManager:
     """Manages geocoding operations"""
     cache = LRUCache(maxsize=1000)
 
-    def __init__(self):
+    def __init__(self, file):
         self.config = configparser.ConfigParser()
         self.config.read('config.ini')
+        self.file = file
 
     @cached(cache)
     def _geocode_place(self, birthplace, gmaps):
@@ -34,7 +35,7 @@ class GeocodeManager:
         """
         Adds coordinates to a DataFrame of birthplaces and saves it to a db.
         """
-        df = pd.read_csv('data/csv/Nushi-Genealogy-3-Apr-2024-214612115.csv')
+        df = pd.read_csv(self.file)
         api_key = self.config['google_api']['api_key']
         gmaps = googlemaps.Client(key=api_key)
         df['coordinates'] = df['Birth place'].apply(

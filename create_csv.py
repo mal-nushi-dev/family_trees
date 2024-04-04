@@ -58,7 +58,7 @@ class FamilyEchoDownloader:
         Runs the entire process of setting up the driver, signing in, and
             downloading the file.
     """
-    URL = 'https://www.familyecho.com/?p=START&c=86mj7dkg5uovc9o3&f=746270266482117578'
+    # URL = 'https://www.familyecho.com/?p=START&c=86mj7dkg5uovc9o3&f=746270266482117578'
     SIGN_IN_ID = "do_signin"
     LOGIN_TYPE = "newuser_off"
     USERNAME = "username"
@@ -69,9 +69,10 @@ class FamilyEchoDownloader:
     CSV_OPTION = "csv"
     DOWNLOAD_BUTTON = "do_download"
 
-    def __init__(self, username, password):
+    def __init__(self, username, password, url):
         self.username = username
         self.password = password
+        self.url = url
         self.driver = None
         self.wait = None
 
@@ -153,7 +154,7 @@ class FamilyEchoDownloader:
         """
         try:
             self.setup_driver()
-            self.driver.get(self.URL)
+            self.driver.get(self.url)
             self.sign_in()
             self.download_file()
         except Exception as e:
