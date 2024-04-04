@@ -40,6 +40,15 @@ class GeocodeManager:
         gmaps = googlemaps.Client(key=api_key)
         df['coordinates'] = df['Birth place'].apply(
             lambda x: self._geocode_place(x, gmaps) if pd.notnull(x) else None)
-        with DatabaseManager(db_file='data/sqlite3/database.db',
-                             dataframe=df) as db_manager:
-            db_manager.create_table_from_dataframe()
+        return df
+
+    def run(self):
+        """
+        Runs the geocoding process by calling the add_coordinates method.
+        This method adds coordinates to a DataFrame of birthplaces and
+            returns the DataFrame.
+
+        Returns:
+            DataFrame: The DataFrame with added coordinates.
+        """
+        return self.add_coordinates()

@@ -160,10 +160,3 @@ class FamilyEchoDownloader:
             print(f"An error occured: {e}")
         finally:
             self.driver.quit()
-
-
-if __name__ == "__main__":
-    usr = config['family_echo']['username']
-    pswrd = config['family_echo']['password']
-    downloader = FamilyEchoDownloader(username=usr, password=pswrd)
-    downloader.run()
