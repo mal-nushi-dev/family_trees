@@ -36,24 +36,24 @@ def run_column_manager(dataframe: pd.DataFrame) -> pd.DataFrame:
     return cm.df
 
 
-def run_geocode_manager(file_path: str) -> pd.DataFrame:
+def run_geocode_manager(dataframe: pd.DataFrame) -> pd.DataFrame:
     """
     Processes a CSV file through GeocodeManager to add geocode coordinates.
 
     Parameters:
     ------
-    file_path (str): Path to the CSV file containing addresses.
+    dataframe (pd.DataFrame): DataFrame to be altered.
 
     Returns:
     ------
     pd.DataFrame: Enhanced DataFrame with added latitude and longitude
                   coordinates.
     """
-    geocode_manager = GeocodeManager(file=file_path)
+    geocode_manager = GeocodeManager(dataframe=dataframe)
     return geocode_manager.run()
 
 
-def run_database_manager(database_name: str, table_name: str, dataframe) -> None:
+def run_database_manager(database_name: str, table_name: str, dataframe: pd.DataFrame) -> None:
     """
     Saves a DataFrame to a database using DatabaseManager.
 
@@ -97,6 +97,7 @@ def main() -> None:
     config = configparser.ConfigParser()
     config.read('config.ini')
 
+    # Donwload csv family tree file
     family_echo_config = config['family_echo']
     run_family_echo_downloader(
         username=family_echo_config['username'],
@@ -104,13 +105,16 @@ def main() -> None:
         url=family_echo_config['url']
     )
 
+    # Rename csv file
     csv_file = run_rename_files(family_name=family_echo_config['family_name'])
-    # coordinates_df = run_geocode_manager(file_path=csv_file)
     # Create the Pandas DataFrame
     df = run_create_dataframe(file_path=csv_file)
-    # Alter column names
+    # Add 'coordinates' column to existing Pandas DataFrame
+    df = run_geocode_manager(dataframe=df)
+    # Alter column names of existing Pandas DataFrame
     df = run_column_manager(dataframe=df)
 
+    # Create sqlite3 database
     run_database_manager(
         database_name=family_echo_config['database_name'],
         table_name=family_echo_config['family_name'],

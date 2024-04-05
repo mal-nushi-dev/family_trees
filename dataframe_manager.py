@@ -44,28 +44,28 @@ class GeocodeManager:
     Manages the geocoding of birthplaces using the Google Maps API,
     employing caching to optimize API usage.
 
-    This class reads a CSV file containing birthplaces, utilizes the
+    This class takes a DataFrame containing birthplaces, utilizes the
     Google Maps API to geocode these locations, and appends the results as
     coordinates to the DataFrame. Caching is used to minimize repeat API calls
     for the same locations, enhancing efficiency and reducing cost.
 
     Attributes:
     ------
-    file (str): Path to the CSV file containing birthplaces.
+    df (pd.DataFrame): DataFrame containing birthplaces.
     cache (LRUCache): A least-recently-used (LRU) cache to store geocoding
                       results and minimize API calls.
 
     Usage:
     ------
-    >>> geocode_manager = GeocodeManager('path/to/birthplaces.csv')
+    >>> geocode_manager = GeocodeManager(df)
     >>> coordinates_df = geocode_manager.run()
     """
     cache = LRUCache(maxsize=1000)
 
-    def __init__(self, file: str) -> None:
+    def __init__(self, dataframe: pd.DataFrame) -> None:
         self.config = configparser.ConfigParser()
         self.config.read('config.ini')
-        self.file = file
+        self.df = dataframe
 
     @cached(cache)
     def _geocode_place(self, birthplace: str, gmaps: googlemaps.Client) -> str:
@@ -101,12 +101,11 @@ class GeocodeManager:
         ------
         pd.DataFrame: The updated DataFrame with a new 'coordinates' column containing geocoded coordinates.
         """
-        df = pd.read_csv(self.file)
         api_key = self.config['google_api']['api_key']
         gmaps = googlemaps.Client(key=api_key)
-        df['coordinates'] = df['Birth place'].apply(
+        self.df['coordinates'] = self.df['Birth place'].apply(
             lambda x: self._geocode_place(x, gmaps) if pd.notnull(x) else None)
-        return df
+        return self.df
 
     def run(self) -> pd.DataFrame:
         """
