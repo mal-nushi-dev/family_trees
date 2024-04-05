@@ -1,3 +1,4 @@
+from streamlit_filter_dataframe import filtered_df
 import configparser
 import sqlite3
 import streamlit as st
@@ -19,7 +20,9 @@ class DatabasePage:
         conn = sqlite3.connect(self.database_path)
         query = f"SELECT * FROM {self.table_name};"
         db_page_df = pd.read_sql_query(sql=query, con=conn)
-        return db_page_df
+        df_filter = filtered_df(db_page_df)
+        db = df_filter.filter_dataframe()
+        return db
 
     # Display the data on the Streamlit page
     def run(self):
