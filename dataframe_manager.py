@@ -103,7 +103,7 @@ class GeocodeManager:
         """
         api_key = self.config['google_api']['api_key']
         gmaps = googlemaps.Client(key=api_key)
-        self.df['coordinates'] = self.df['Birth place'].apply(
+        self.df['Birth place coordinates'] = self.df['Birth place'].apply(
             lambda x: self._geocode_place(x, gmaps) if pd.notnull(x) else None)
         return self.df
 
