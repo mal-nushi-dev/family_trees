@@ -1,7 +1,7 @@
 import configparser
 import pandas as pd
 from create_coordinates import GeocodeManager
-from create_database import DatabaseManager
+from create_database import create_db
 from create_csv import FamilyEchoDownloader
 from rename_file import rename_file
 
@@ -52,9 +52,9 @@ def run_database_manager(database_name: str, table_name: str, dataframe) -> None
         Modifies the database by creating or replacing a table with the
         provided DataFrame.
     """
-    with DatabaseManager(database=database_name,
-                         table=table_name,
-                         dataframe=dataframe) as db_manager:
+    with create_db(database=database_name,
+                   table=table_name,
+                   dataframe=dataframe) as db_manager:
         db_manager.create_table_from_dataframe()
 
 
