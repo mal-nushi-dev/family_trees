@@ -76,7 +76,7 @@ def run_geocode_manager(dataframe: pd.DataFrame) -> pd.DataFrame:
     return geocode_manager.run()
 
 
-def run_database_manager(database_name: str, table_name: str, dataframe: pd.DataFrame) -> None:
+def run_create_database(database_name: str, table_name: str, dataframe: pd.DataFrame) -> None:
     """
     Saves a DataFrame to a database using DatabaseManager.
 
@@ -138,7 +138,7 @@ def main() -> None:
     df = run_column_manager(dataframe=df)
 
     # Create sqlite3 database & table
-    run_database_manager(
+    run_create_database(
         database_name=family_echo_config['database_name'],
         table_name=family_echo_config['family_name'],
         dataframe=df
