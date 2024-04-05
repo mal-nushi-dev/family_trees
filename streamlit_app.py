@@ -34,15 +34,13 @@ def main():
     # Read configurations from config.ini
     config = configparser.ConfigParser()
     config.read('config.ini')
-    family_echo_config = config['family_echo']
-    table_name = family_echo_config['family_name'].upper()
 
     # Print page title
-    st.title(f"{table_name} GENEALOGY")
+    st.title("NUSHI GENEALOGY")
 
     # Create a DatabasePage object and run it
     database_page = DatabasePage(database_path='family_trees.db',
-                                 table_name=table_name)
+                                 table_name="NUSHI")
     database_page.run()
 
 
