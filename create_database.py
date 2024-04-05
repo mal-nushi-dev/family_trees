@@ -2,7 +2,7 @@ import sqlite3
 import pandas as pd
 
 
-class create_db:
+class CreateDatabase:
     """
     Manages interactions with a SQLite database, specifically for writing
     pandas DataFrames to a specified table.
@@ -25,13 +25,13 @@ class create_db:
     Examples:
     ---------
     >>> df = pd.DataFrame({'column1': [1, 2], 'column2': [3, 4]})
-    >>> with create_db('my_database.db', 'my_table', df) as create_db:
+    >>> with CreateDatabase('my_database.db', 'my_table', df) as create_db:
     ...     create_db.create_table_from_dataframe()
     """
 
     def __init__(self, database: str, table: str, dataframe: pd.DataFrame) -> None:
         """
-        Initializes the create_db with the specified database,
+        Initializes the CreateDatabase with the specified database,
         table name, and DataFrame.
 
         Parameters:
@@ -75,7 +75,7 @@ class create_db:
         self.dataframe.to_sql(
             self.table.upper(), self.connection, if_exists='replace')
 
-    def __enter__(self) -> "create_db":
+    def __enter__(self) -> "CreateDatabase":
         """
         Establishes the database connection when entering a
         'with' statement context.
