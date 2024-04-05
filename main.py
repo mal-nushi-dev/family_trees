@@ -54,7 +54,8 @@ def run_column_manager(dataframe: pd.DataFrame) -> pd.DataFrame:
     ------
     pd.DataFrame: The processed dataframe after applying column management operations.
     """
-    cm = ColumnManager(dataframe=dataframe).upper_case_columns().whitespace_management()
+    cm = ColumnManager(
+        dataframe=dataframe).upper_case_columns().whitespace_management()
     return cm.df
 
 
