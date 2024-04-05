@@ -3,6 +3,7 @@ import configparser
 from cachetools import cached, LRUCache
 import googlemaps
 
+
 class GeocodeManager:
     """
     Manages the geocoding of birthplaces using the Google Maps API,
@@ -85,6 +86,7 @@ class GeocodeManager:
                           column for geocoded birthplaces.
         """
         return self.add_coordinates()
+
 
 class ColumnManager:
     """
