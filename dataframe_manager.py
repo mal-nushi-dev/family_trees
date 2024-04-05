@@ -4,6 +4,41 @@ from cachetools import cached, LRUCache
 import googlemaps
 
 
+class CreateDataFrame:
+    """
+    A class used to create a pandas DataFrame from a CSV file.
+
+    Attributes
+    ----------
+    file (str): A string representing the path to the CSV file
+
+    Methods
+    -------
+    create_dataframe(): Returns a pandas DataFrame created from the CSV file.
+    """
+
+    def __init__(self, file: str) -> None:
+        """
+        Constructs all the necessary attributes for the CreateDataFrame object.
+
+        Parameters
+        ----------
+        file (str): A string representing the path to the CSV file
+        """
+        self.file = file
+
+    def create_dataframe(self) -> pd.DataFrame:
+        """
+        Returns a pandas DataFrame created from the CSV file.
+
+        Returns
+        -------
+        pd.DataFrame: A pandas DataFrame created from the CSV file
+        """
+        df = pd.read_csv(self.file)
+        return df
+
+
 class GeocodeManager:
     """
     Manages the geocoding of birthplaces using the Google Maps API,
@@ -82,8 +117,8 @@ class GeocodeManager:
         location, and returning the enhanced DataFrame.
 
         Returns:
-            pd.DataFrame: The DataFrame augmented with a 'coordinates'
-                          column for geocoded birthplaces.
+        ------
+        pd.DataFrame: The DataFrame augmented with a 'coordinates' column for geocoded birthplaces.
         """
         return self.add_coordinates()
 

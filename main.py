@@ -3,7 +3,7 @@ import pandas as pd
 # from create_coordinates import GeocodeManager
 from create_database import CreateDatabase
 from create_csv import FamilyEchoDownloader
-from dataframe_manager import GeocodeManager, ColumnManager
+from dataframe_manager import CreateDataFrame, GeocodeManager, ColumnManager
 from rename_file import rename_file
 
 
@@ -25,6 +25,15 @@ def run_family_echo_downloader(username: str, password: str, url: str) -> None:
     downloader = FamilyEchoDownloader(
         username=username, password=password, url=url)
     downloader.run()
+
+
+def run_create_dataframe(file_path: str) -> pd.DataFrame:
+    return CreateDataFrame(file=file_path).create_dataframe()
+
+
+def run_column_manager(dataframe: pd.DataFrame) -> pd.DataFrame:
+    cm = ColumnManager(dataframe=dataframe).upper_case_columns().whitespace_management()
+    return cm.df
 
 
 def run_geocode_manager(file_path: str) -> pd.DataFrame:
@@ -85,15 +94,6 @@ def run_rename_files(family_name: str) -> str:
 
 
 def main() -> None:
-    """
-    Orchestrate the execution of scripts to download, process,
-    and store family data.
-
-    Reads configuration from 'config.ini', downloads family data from
-    FamilyEcho, renames the downloaded file, adds geocode coordinates to
-    address data in the file, and saves the enhanced data
-    into a SQLite database.
-    """
     config = configparser.ConfigParser()
     config.read('config.ini')
 
@@ -105,16 +105,16 @@ def main() -> None:
     )
 
     csv_file = run_rename_files(family_name=family_echo_config['family_name'])
-    coordinates_df = run_geocode_manager(file_path=csv_file)
-    
-    cm = ColumnManager(coordinates_df)
-    cm.upper_case_columns().whitespace_management()
-
+    # coordinates_df = run_geocode_manager(file_path=csv_file)
+    # Create the Pandas DataFrame
+    df = run_create_dataframe(file_path=csv_file)
+    # Alter column names
+    df = run_column_manager(dataframe=df)
 
     run_database_manager(
         database_name=family_echo_config['database_name'],
         table_name=family_echo_config['family_name'],
-        dataframe=cm.df
+        dataframe=df
     )
 
 
