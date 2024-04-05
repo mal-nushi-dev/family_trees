@@ -1,7 +1,18 @@
 body {
     font-family: "Fira Mono", monospace;
+    font-size: 20px;
+}
+
+div.family_trees {
+    text-align: center;
+}
+  
+ul.myUL {
+    display: inline-block;
+    text-align: left;
 }
 
 header {
     text-align: center;
+    font-size: 25px;
 }
