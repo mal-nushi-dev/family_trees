@@ -28,10 +28,32 @@ def run_family_echo_downloader(username: str, password: str, url: str) -> None:
 
 
 def run_create_dataframe(file_path: str) -> pd.DataFrame:
+    """
+    Runs the CreateDataFrame class to create a pandas DataFrame from a given file.
+
+    Args:
+    ------
+    file_path (str): The path to the file.
+
+    Returns:
+    ------
+    pd.DataFrame: The created DataFrame.
+    """
     return CreateDataFrame(file=file_path).create_dataframe()
 
 
 def run_column_manager(dataframe: pd.DataFrame) -> pd.DataFrame:
+    """
+    Applies column management operations to the input dataframe.
+
+    Args:
+    ------
+    dataframe (pd.DataFrame): The input dataframe to be processed.
+
+    Returns:
+    ------
+    pd.DataFrame: The processed dataframe after applying column management operations.
+    """
     cm = ColumnManager(dataframe=dataframe).upper_case_columns().whitespace_management()
     return cm.df
 
@@ -114,7 +136,7 @@ def main() -> None:
     # Alter column names of existing Pandas DataFrame
     df = run_column_manager(dataframe=df)
 
-    # Create sqlite3 database
+    # Create sqlite3 database & table
     run_database_manager(
         database_name=family_echo_config['database_name'],
         table_name=family_echo_config['family_name'],
