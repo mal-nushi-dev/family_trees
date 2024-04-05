@@ -57,6 +57,7 @@ class DatabaseManager:
         Raises:
             sqlite3.Error: If there is an issue connecting to the database.
         """
+        print(f"Connecting to the database, '{self.database.upper()}.db'...")
         self.connection = sqlite3.connect(self.database.upper() + '.db')
 
     def create_table_from_dataframe(self) -> None:
@@ -70,6 +71,7 @@ class DatabaseManager:
         Raises:
             ValueError: If the connection has not been established.
         """
+        print(f"Creating the table, '{self.table.upper()}' from DataFrame...")
         self.dataframe.to_sql(
             self.table.upper(), self.connection, if_exists='replace')
 
@@ -105,3 +107,4 @@ class DatabaseManager:
         if self.connection:
             self.connection.close()
             self.connection = None
+            print('Closed connection to database...')
