@@ -23,7 +23,7 @@ class CreateMap:
         return query
 
     def create_dataframe(self, query: str, database_connection: sqlite3.connect) -> pd.DataFrame:
-        df = pd.read_sql_query(query=query, con=database_connection)
+        df = pd.read_sql_query(sql=query, con=database_connection)
         return df
 
     def scatter_plots(self, dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -58,33 +58,13 @@ class CreateMap:
     def __exit__(self, exc_type, exc_val, ecx_tb):
         self.conn.close()
 
-# with CreateMap(database='family_trees.db',
-#                query='''
-#                SELECT FULL_NAME, BIRTH_PLACE_LATITUDE, BIRTH_PLACE_LONGITUDE
-#                FROM NUSHI
-#                WHERE BIRTH_PLACE_LATITUDE IS NOT NULL
-#                AND BIRTH_PLACE_LONGITUDE IS NOT NULL;
-#                ''')
 
-# conn = sqlite3.connect('family_trees.db')
-# query = f'''
-#     SELECT
-#         FULL_NAME,
-#         BIRTH_PLACE_LATITUDE,
-#         BIRTH_PLACE_LONGITUDE
-#     FROM NUSHI
-#     WHERE BIRTH_PLACE_LATITUDE IS NOT NULL
-#     AND BIRTH_PLACE_LONGITUDE IS NOT NULL;
-# '''
-# birthplace_df = pd.read_sql_query(sql=query, con=conn)
-# print(birthplace_df)
+with CreateMap(database='family_trees.db',
+               lat_column='BIRTH_PLACE_LATITUDE',
+               long_column='BIRTH_PLACE_LONGITUDE') as birth_map:
+    birth_map.__run__()
 
-# # Add random noise to latitude and longitude to scatter dots around a bit
-# noise_scale = 0.001  # Adjust this value as needed
-# birthplace_df['BIRTH_PLACE_LATITUDE'] += np.random.normal(0, noise_scale, size=len(birthplace_df))
-# birthplace_df['BIRTH_PLACE_LONGITUDE'] += np.random.normal(0, noise_scale, size=len(birthplace_df))
-
-# st.map(data=birthplace_df,
-#        latitude='BIRTH_PLACE_LATITUDE',
-#        longitude='BIRTH_PLACE_LONGITUDE',
-#        size=10)
+with CreateMap(database='family_trees.db',
+               lat_column='ADDRESS_LATITUDE',
+               long_column='ADDRESS_LONGITUDE') as address_map:
+    address_map.__run__()
