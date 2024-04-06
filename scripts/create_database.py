@@ -108,3 +108,7 @@ class CreateDatabase:
             self.connection.close()
             self.connection = None
             print('Closed connection to database...')
+
+
+if __name__ == "__main__":
+    pass

@@ -97,3 +97,7 @@ class filtered_df:
 
         # Default return value
         return pd.Series([True]*len(usr_df))
+
+
+if __name__ == "__main__":
+    pass

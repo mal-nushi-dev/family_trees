@@ -61,9 +61,4 @@ def rename_file(family_name: str) -> Optional[str]:
 
 
 if __name__ == "__main__":
-    # Specify the family name here
-    renamed_file = rename_file(family_name="nushi")
-    if renamed_file:
-        print(f"File successfully renamed to: {renamed_file}")
-    else:
-        print("No file was renamed.")
+    pass

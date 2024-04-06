@@ -225,3 +225,7 @@ class ColumnManager:
         """
         self.df.columns = self.df.columns.str.strip().str.replace(' ', '_')
         return self
+
+
+if __name__ == "__main__":
+    pass

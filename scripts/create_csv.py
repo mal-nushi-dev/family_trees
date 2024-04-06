@@ -162,3 +162,7 @@ class FamilyEchoDownloader:
             print(f"An error occured: {e}")
         finally:
             self.driver.quit()
+
+
+if __name__ == "__main__":
+    pass
