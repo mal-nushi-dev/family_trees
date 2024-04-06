@@ -1,4 +1,4 @@
-from streamlit_filter_dataframe import filtered_df
+from streamlit.scripts.streamlit_filter_dataframe import filtered_df
 import configparser
 import sqlite3
 import streamlit as st
