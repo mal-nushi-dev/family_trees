@@ -59,15 +59,5 @@ class CreateMap:
         self.conn.close()
 
 
-def main():
-    with CreateMap(database='family_trees.db',
-                   column='BIRTH_PLACE') as birth_map:
-        birth_map.__run__()
-
-    with CreateMap(database='family_trees.db',
-                   column='ADDRESS') as address_map:
-        address_map.__run__()
-
-
 if __name__ == "__main__":
-    main()
+    pass
