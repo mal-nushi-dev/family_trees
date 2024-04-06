@@ -1,7 +1,4 @@
-from scripts.streamlit_filter_dataframe import filtered_df
-import sqlite3
 import streamlit as st
-import pandas as pd
 
 
 # Set page configurations
@@ -10,20 +7,16 @@ st.set_page_config(
 )
 
 
-# Load data from the database
-def create_dataframe(database_path, table_name):
-    conn = sqlite3.connect(database_path)
-    query = f"SELECT * FROM {table_name};"
-    database_df = pd.read_sql_query(sql=query, con=conn)
-    df_filter = filtered_df(database_df)
-    database = df_filter.filter_dataframe()
-    return database
-
-
 # Print page title
 st.title("NUSHI GENEALOGY")
-
-# Create a DatabasePage object and run it
-database_page = create_dataframe(database_path='family_trees.db',
-                                 table_name="NUSHI")
-st.dataframe(database_page)
+st.write("""Welcome to the Roots and Wings of Our Family Tree!
+         Embark on a journey through time and discover the rich tapestry that tells
+         the story of our ancestors. Here, amidst the branches of our shared
+         history, you'll find the resilience, love, and adventures that have
+         shaped us. From the distant past to our present moments, every leaf
+         in our family tree carries a unique tale waiting to be uncovered.
+         Dive in, explore, and connect with the stories that have brought us here.
+         Together, let's celebrate where we've come from and the endless
+         possibilities that lie ahead in our family's ongoing story.
+         We're so glad you're here to share in this journey of discovery and
+         connection.""")
