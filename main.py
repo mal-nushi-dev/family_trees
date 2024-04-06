@@ -1,10 +1,10 @@
 import configparser
 import pandas as pd
 # from create_coordinates import GeocodeManager
-from create_database import CreateDatabase
-from create_csv import FamilyEchoDownloader
-from dataframe_manager import CreateDataFrame, GeocodeManager, ColumnManager
-from rename_file import rename_file
+from scripts.create_database import CreateDatabase
+from scripts.create_csv import FamilyEchoDownloader
+from scripts.dataframe_manager import CreateDataFrame, GeocodeManager, ColumnManager
+from scripts.rename_file import rename_file
 
 
 def run_family_echo_downloader(username: str, password: str, url: str) -> None:
