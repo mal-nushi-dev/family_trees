@@ -5,10 +5,11 @@ import numpy as np
 
 
 class CreateMap:
-    def __init__(self, database: str, column: str) -> None:
+    def __init__(self, database: str, column: str, name: str) -> None:
         self.database = database
         self.lat_column = f'{column}_LATITUDE'
         self.long_column = f'{column}_LONGITUDE'
+        self.search_term = name
 
     def query_generator(self):
         query = f'''
@@ -18,7 +19,8 @@ class CreateMap:
                 {self.long_column}
             FROM NUSHI
             WHERE {self.lat_column} IS NOT NULL
-            AND {self.long_column} IS NOT NULL;
+            AND {self.long_column} IS NOT NULL
+            AND FULL_NAME LIKE "%{self.search_term}%";
         '''
         return query
 
