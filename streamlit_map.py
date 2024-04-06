@@ -5,10 +5,10 @@ import numpy as np
 
 
 class CreateMap:
-    def __init__(self, database: str, lat_column: str, long_column: str) -> None:
+    def __init__(self, database: str, column: str) -> None:
         self.database = database
-        self.lat_column = lat_column
-        self.long_column = long_column
+        self.lat_column = f'{column}_LATITUDE'
+        self.long_column = f'{column}_LONGITUDE'
 
     def query_generator(self):
         query = f'''
@@ -60,11 +60,9 @@ class CreateMap:
 
 
 with CreateMap(database='family_trees.db',
-               lat_column='BIRTH_PLACE_LATITUDE',
-               long_column='BIRTH_PLACE_LONGITUDE') as birth_map:
+               column='BIRTH_PLACE') as birth_map:
     birth_map.__run__()
 
 with CreateMap(database='family_trees.db',
-               lat_column='ADDRESS_LATITUDE',
-               long_column='ADDRESS_LONGITUDE') as address_map:
+               column='ADDRESS') as address_map:
     address_map.__run__()
