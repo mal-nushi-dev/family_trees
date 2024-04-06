@@ -59,7 +59,7 @@ def run_column_manager(dataframe: pd.DataFrame) -> pd.DataFrame:
     return cm.df
 
 
-def run_geocode_manager(dataframe: pd.DataFrame) -> pd.DataFrame:
+def run_geocode_manager(dataframe: pd.DataFrame, column: str) -> pd.DataFrame:
     """
     Processes a CSV file through GeocodeManager to add geocode coordinates.
 
@@ -72,7 +72,7 @@ def run_geocode_manager(dataframe: pd.DataFrame) -> pd.DataFrame:
     pd.DataFrame: Enhanced DataFrame with added latitude and longitude
                   coordinates.
     """
-    geocode_manager = GeocodeManager(dataframe=dataframe)
+    geocode_manager = GeocodeManager(dataframe=dataframe, column=column)
     return geocode_manager.run()
 
 
@@ -132,8 +132,11 @@ def main() -> None:
     csv_file = run_rename_files(family_name=family_echo_config['family_name'])
     # Create the Pandas DataFrame
     df = run_create_dataframe(file_path=csv_file)
-    # Add 'coordinates' column to existing Pandas DataFrame
-    df = run_geocode_manager(dataframe=df)
+    # Add 'coordinates' column(s) to existing Pandas DataFrame
+    df = run_geocode_manager(dataframe=df, column='Birth place')
+    df = run_geocode_manager(dataframe=df, column='Address')
+    df = run_geocode_manager(dataframe=df, column='Burial place')
+    df = run_geocode_manager(dataframe=df, column='Death place')
     # Alter column names of existing Pandas DataFrame
     df = run_column_manager(dataframe=df)
 

@@ -41,17 +41,17 @@ class CreateDataFrame:
 
 class GeocodeManager:
     """
-    Manages the geocoding of birthplaces using the Google Maps API,
+    Manages the geocoding of location using the Google Maps API,
     employing caching to optimize API usage.
 
-    This class takes a DataFrame containing birthplaces, utilizes the
+    This class takes a DataFrame containing location, utilizes the
     Google Maps API to geocode these locations, and appends the results as
     coordinates to the DataFrame. Caching is used to minimize repeat API calls
     for the same locations, enhancing efficiency and reducing cost.
 
     Attributes:
     ------
-    - df (pd.DataFrame): DataFrame containing birthplaces.
+    - df (pd.DataFrame): DataFrame containing locations.
     - cache (LRUCache): A least-recently-used (LRU) cache to store geocoding
     results and minimize API calls.
 
@@ -59,15 +59,15 @@ class GeocodeManager:
     -------
     - __init__(self, dataframe: pd.DataFrame): Constructs all the necessary attributes
     for the GeocodeManager object.
-    - _geocode_place(self, birthplace: str, gmaps: googlemaps.Client) -> str:
-    Geocodes a birthplace using the Google Maps API, with results cached to improve efficiency.
+    - _geocode_place(self, location: str, gmaps: googlemaps.Client) -> str:
+    Geocodes a location using the Google Maps API, with results cached to improve efficiency.
     - add_coordinates(self) -> pd.DataFrame: Adds coordinates to the DataFrame of
-    birthplaces read from a CSV file.
+    locations read from a CSV file.
     - split_coordinates(self, dataframe: pd.DataFrame) -> pd.DataFrame: Splits a string
     column in the DataFrame containing coordinate pairs into two separate columns
     for latitude and longitude.
     - run(self) -> pd.DataFrame: Executes the geocoding process, enhancing a DataFrame
-    with geocoded coordinates for birthplaces.
+    with geocoded coordinates for locations.
 
 
     Usage:
@@ -77,29 +77,30 @@ class GeocodeManager:
     """
     cache = LRUCache(maxsize=1000)
 
-    def __init__(self, dataframe: pd.DataFrame) -> None:
+    def __init__(self, dataframe: pd.DataFrame, column: str) -> None:
         self.config = configparser.ConfigParser()
         self.config.read('config.ini')
         self.df = dataframe
+        self.column = column
 
     @cached(cache)
-    def _geocode_place(self, birthplace: str, gmaps: googlemaps.Client) -> str:
+    def _geocode_place(self, location: str, gmaps: googlemaps.Client) -> str:
         """
-        Geocodes a birthplace using the Google Maps API, with results
+        Geocodes a location using the Google Maps API, with results
         cached to improve efficiency.
 
         Parameters:
         ------
-        - birthplace (str): The birthplace to geocode.
+        - location (str): The location to geocode.
         - gmaps (googlemaps.Client): The Google Maps client instance configured
         with an API key.
 
         Returns:
         ------
-        - str | None: The coordinates of the birthplace as a string '(latitude, longitude)',
+        - str | None: The coordinates of the location as a string '(latitude, longitude)',
         or None if geocoding fails.
         """
-        geocode_result = gmaps.geocode(birthplace)
+        geocode_result = gmaps.geocode(location)
         if geocode_result:
             latitude = geocode_result[0]['geometry']['location']['lat']
             longitude = geocode_result[0]['geometry']['location']['lng']
@@ -120,8 +121,8 @@ class GeocodeManager:
         """
         api_key = self.config['google_api']['api_key']
         gmaps = googlemaps.Client(key=api_key)
-        self.df['Birth place coordinates'] = self.df['Birth place'].apply(
-            lambda x: self._geocode_place(x, gmaps) if pd.notnull(x) else None)
+        self.df[f'{self.column} coordinates'] = self.df[self.column].apply(
+            lambda x: self._geocode_place(location=x, gmaps=gmaps) if pd.notnull(x) else None)
         return self.df
 
     def split_coordinates(self, dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -129,52 +130,52 @@ class GeocodeManager:
         Splits a string column in the DataFrame containing coordinate pairs into two
         separate columns for latitude and longitude.
 
-        The method expects the DataFrame to have a column named 'Birth place coordinates'
+        The method expects the DataFrame to have a column named '{self.location} coordinates'
         with coordinate pairs in the format '(latitude, longitude)'. It extracts these
-        coordinates, splits them into two separate columns named 'birth place latitude'
-        and 'birth place longitude', and converts the string representations to numeric (float)
+        coordinates, splits them into two separate columns named '{self.location} latitude'
+        and '{self.location} longitude', and converts the string representations to numeric (float)
         values. Any errors in conversion or missing values are handled gracefully,
         resulting in NaN values in the respective rows.
 
         Parameters:
         ------
-        - dataframe (pd.DataFrame): The DataFrame containing the 'Birth place coordinates' column.
+        - dataframe (pd.DataFrame): The DataFrame containing the '{self.location} coordinates' column.
 
         Returns:
         ------
-        - pd.DataFrame: The modified DataFrame with the original 'Birth place coordinates'
-        column split into 'birth place latitude' and 'birth place longitude' columns,
+        - pd.DataFrame: The modified DataFrame with the original '{self.location} coordinates'
+        column split into '{self.location} latitude' and '{self.location} longitude' columns,
         both containing numeric (float) values.
 
         Note:
         ------
         - The method operates on and modifies the DataFrame in-place, and also
         returns the modified DataFrame for convenience.
-        - Ensure that the 'Birth place coordinates' column follows the expected
+        - Ensure that the '{self.location} coordinates' column follows the expected
         format to avoid unexpected results.
         """
         # Extracting and splitting the values into two new columns
-        self.df[['birth place latitude', 'birth place longitude']
-                ] = self.df['Birth place coordinates'].str.extract(r'\(([^,]+),\s*([^)]+)\)')
+        self.df[[f'{self.column} latitude', f'{self.column} longitude']
+                ] = self.df[f'{self.column} coordinates'].str.extract(r'\(([^,]+),\s*([^)]+)\)')
 
         # Convert the new columns to numeric, handling errors for invalid parsing
-        self.df['birth place latitude'] = pd.to_numeric(
-            self.df['birth place latitude'], errors='coerce')
-        self.df['birth place longitude'] = pd.to_numeric(
-            self.df['birth place longitude'], errors='coerce')
+        self.df[f'{self.column} latitude'] = pd.to_numeric(
+            self.df[f'{self.column} latitude'], errors='coerce')
+        self.df[f'{self.column} longitude'] = pd.to_numeric(
+            self.df[f'{self.column} longitude'], errors='coerce')
         return self.df
 
     def run(self) -> pd.DataFrame:
         """
         Executes the geocoding process, enhancing a DataFrame with geocoded
-        coordinates for birthplaces.
+        coordinates for locations.
 
-        This method orchestrates reading birthplace data, geocoding each
+        This method orchestrates reading location data, geocoding each
         location, and returning the enhanced DataFrame.
 
         Returns:
         ------
-        - pd.DataFrame: The DataFrame augmented with a 'coordinates' column for geocoded birthplaces.
+        - pd.DataFrame: The DataFrame augmented with a 'coordinates' column for geocoded locations.
         """
         df = self.add_coordinates()
         return self.split_coordinates(dataframe=df)
