@@ -1,0 +1,576 @@
+body {
+    margin: 0;
+    padding: 0;
+    color: #000;
+    background-color: #FFF;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size:12px;
+    font-weight: lighter;
+}
+
+#view_id {
+    margin: 0 auto;
+    padding: 10px;
+    max-width: 1004px;
+}
+
+
+
+#background_id {
+   background-image:url('../resources/TopShadow.png');
+    position:absolute;
+    top:0px;
+    left:0px;
+    height:600px;
+    width:100%;
+    z-index:-1;
+    opacity:0.05;
+}
+
+
+
+#separator {
+   background-image:url('../resources/SeparatorShadow.png');
+   background-size:100%;
+   background-repeat:no-repeat;
+   height:16px;
+}
+
+#separator_inverted {
+   background-image:url('../resources/SeparatorShadowInverted.png');
+   background-size:100%;
+   background-repeat:no-repeat;
+   height:16px;
+   margin-bottom:24px;
+}
+
+
+
+a {
+    color: #000;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:active {
+    text-decoration: underline;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+
+img {
+    border: 0px;
+}
+
+
+
+h1 {
+    text-decoration: none;
+    margin:0px;
+    font-weight:lighter;
+}
+
+h2 {
+    margin: 40px 0px 20px 0px;
+    font-weight:lighter;
+    border-bottom: 1px solid #DDD;
+}
+
+
+
+table {
+    border-spacing: 1px;
+    width: 100%;
+    table-layout: auto;
+    padding: 5px;
+    font-size: 120%;
+    border-collapse:collapse;
+}
+
+table tr {
+    text-align: left;
+    border-bottom: 1px solid #DDD;
+}
+
+table tr th {
+    font-weight: normal;
+    white-space: nowrap;
+    padding: 8px;
+}
+
+table tr td {
+    vertical-align: top;
+    padding: 8px;
+}
+
+.table_subheader_row {
+    text-align: center;
+    font-weight: bold;
+    font-size: 110%;
+}
+
+table tr td img {
+    vertical-align: middle;
+}
+
+.table_data_left_aligned {
+    text-align: left;
+}
+
+.table_data_center_aligned {
+    text-align: center;
+}
+
+.table_data_right_aligned {
+    text-align: right;
+}
+
+
+/*Header*/
+#header_id {
+    position: relative;
+    padding: 10px;
+}
+
+#header_inner_id {
+    display: table;
+    width: 100%;
+}
+
+#header_emblem_left_id {
+    display: table-cell;
+    width: 128px;
+    height: 128px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#header_emblem_left_id img {
+    max-height: 128px;
+    max-width: 128px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+#header_text_id {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    height: 128px;
+    padding: 0px 10px;
+}
+
+#header_text_id h1 {
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
+    font-size:48px;
+    white-space: normal;
+}
+
+
+
+/*Menu*/
+#menu_id {
+    text-align:center;
+}
+
+#menu_row_id {
+    display: inline-block;
+    list-style: none;
+    height: auto;
+    padding: 0px;
+    margin-top:0px;
+    margin-bottom:0px;
+}
+
+.menu_item {
+    display: inline-block;
+    margin: 0px;
+    font-size: 140%;
+}
+
+.menu_item a {
+    padding: 10px;
+    display: block;
+}
+
+.menu_item a:hover {
+    text-decoration:underline;
+}
+
+
+
+/*Content*/
+#content_id {
+    clear: both;
+    margin-bottom:32px;
+    margin-right:48px;
+    margin-left:48px;
+}
+
+
+
+.main_heading {
+    font-size:125%;
+}
+
+.home_page .main_heading {
+    display: none;
+}
+
+
+
+/*Page subsections*/
+.page_subsection {
+    margin-top: 10px;
+    padding: 0px;
+    overflow: auto;
+}
+
+.page_subsection h1 {
+    text-decoration: none;
+    margin-top: 0px;
+
+}
+
+.page_subsection h2 {
+}
+
+.subsectionHiddenForPrivacy {
+    margin: 5px;
+}
+
+
+
+/*List pages*/
+.person_list_page .main_heading {
+    display: none;
+}
+
+.person_list_page #paging_menu_row_id, .family_list_page #paging_menu_row_id {
+    text-align: center;
+    margin: 5px;
+}
+
+.person_list_page .paging_menu_item, .family_list_page .paging_menu_item {
+    list-style: none;
+    display: inline-block;
+}
+
+.person_list_page .paging_menu_item a, .family_list_page .paging_menu_item a {
+}
+
+.family_list_page .main_heading {
+    display: none;
+}
+
+.source_list_page .main_heading {
+    display: none;
+}
+
+
+
+/*Person page*/
+.person_page .main_heading img {
+    float: right;
+    max-height: 128px;
+    max-width: 128px;
+}
+
+.person_page .main_heading {
+    overflow: auto;
+}
+
+#person_chart_canvas_id {
+    margin: 5px auto;
+    display: block;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+
+
+/*Media subsection*/
+.media_subsection {
+    margin: 0px;
+    padding: 5px;
+    overflow: auto;
+}
+
+.media_subsection h3 {
+    margin: 0px 0px 5px 0px;
+    padding: 1px;
+    overflow: auto;
+
+    font-size: 120%;
+}
+
+.media_subsection > div {
+    overflow: auto;
+}
+
+.media_div {
+    position: relative;
+    float: left;
+    width: 148px;
+    height: 150px;
+    padding: 0px;
+    margin-left: 0px;
+    margin-top: 0px;
+    margin-bottom: 20px;
+    margin-right: 20px;
+    line-height: 148px;
+}
+
+.media_div p {
+    display: none;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    line-height: 16px;
+    margin: 0px;
+    
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #EEE;
+    
+    padding: 1px;
+    
+    overflow: hidden;
+    width: 100%;
+    height: 16px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.media_div:hover p {
+    display: block;
+}
+
+
+.media_div img {
+    max-width: 128px;
+    max-height: 128px;
+    height: auto;
+    margin: 10px;
+    vertical-align: middle;
+}
+
+.media_div a {
+    display: block;
+    text-align: center;
+}
+
+.media_div a:hover {
+}
+
+
+
+/*Homepage*/
+#home_page_creation_date_id {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+#gedcom_file_id {
+    text-align: center;
+    margin-bottom: 10px;
+    margin: 5px;
+    padding: 5px;
+}
+
+#gedcom_file_id a {
+    display: inline-block;
+}
+
+#home_page_comment_id {
+    margin-top: 10px;
+    padding: 0px;
+}
+
+#home_page_comment_id div {
+    margin: 5px;
+    padding: 5px;
+}
+
+#home_page_comment_id h2 {
+
+    margin: 0px;
+    padding: 5px 5px 0px 5px;
+}
+
+
+
+/*Mediapage*/
+#media_view_subsection_id {
+    text-align: center;
+    margin: 10px;
+}
+
+#media_view_subsection_id a {
+    display: inline-block;
+}
+
+#media_view_subsection_id img {
+    display:block;
+    margin: 10px auto;
+    max-width: 500px;
+}
+
+#media_view_subsection_id object {
+    outline: none;
+}
+
+/*Contactpage*/
+.contact_page .page_subsection {
+    margin-top: 10px;
+    padding: 0px;
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 400px;
+    max-width: 500px;
+}
+
+/*Chartpage*/
+#chart_view_subsection_id {
+    overflow: auto;
+    margin: 10px;
+}
+
+#chart_view_subsection_id img {
+    margin: 0px auto;
+    max-width: 500px;
+    display: block;
+}
+
+/*Statisticspage*/
+.statistics_page .page_subsection {
+    margin-top: 10px;
+    padding: 0px;
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 800px;
+}
+
+.statistics_page td {
+	width: 50%;
+}
+
+.statistics_page td:nth-child(2) {
+	text-align: center;
+}
+
+.statistic_chart {
+    margin: 5px;
+}
+
+.statistic_chart h3 {
+    padding-bottom: 5px;
+}
+
+.statistic_chart div {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.statistic_chart img {
+    display: block;
+    margin: 0px auto;
+}
+
+
+
+
+/*Footer*/
+#footer_id {
+}
+
+#footer_text_id {
+    text-align: center;
+    height: 45px;
+    vertical-align: middle;
+    line-height: 45px;
+    overflow: hidden;
+}
+
+
+
+/*Language selection*/
+#language_id {
+    float: right;
+    width: 43px;
+}
+
+#language_id img {
+    height: 32px;
+    width: 32px;
+    vertical-align: middle;
+}
+
+#language_id ul ul {
+	display: none;
+}
+
+#language_id ul li:hover > ul {
+    display: block;
+}
+
+#language_id ul li:hover {
+}
+
+#language_id ul {
+	padding: 0px;
+    margin: 0px;
+	list-style: none;
+}
+
+#language_id > ul > li {
+	float: left;
+    position: relative;
+    margin-left: 1px;
+}
+
+#language_id ul li a:hover {
+}
+
+#language_id ul li a {
+    display: block;
+    text-decoration: none;
+    width: 42px;
+    height: 45px;
+    line-height: 42px;
+    text-align: center;
+}
+
+#language_id ul li {
+    display: block;
+    text-decoration: none;
+    width: 42px;
+    height: 45px;
+    line-height: 42px;
+    text-align: center;
+}
+
+#language_id ul ul {
+    padding: 0;
+	position: absolute;
+    bottom: 100%;
+}
+
+#language_id ul ul li {
+    float: none;
+}
+
+/*Markers*/
+.not_exported {
+    color: #999;
+}
